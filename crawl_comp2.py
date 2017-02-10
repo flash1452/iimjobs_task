@@ -16,6 +16,15 @@ conn = pymysql.connect(
     passwd='vishal',
     host='localhost')
 def comp2_crawling(company_id, url, company_posting_name, last_updated, new_posting_details):
+    """Crawl from Second company career page.
+
+    Keyword arguments:
+    company_id -- the company_id of first company
+    url -- the url to scrape from
+    company_posting_name -- array of posts already in db
+    last_updated -- last updated time from db
+    new_posting_details -- array conatining info about the new postings that are not in db
+    """
     global conn
     try:
         url_to_crawl = requests.get(url, verify = False, timeout = 30)
