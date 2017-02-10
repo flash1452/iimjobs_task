@@ -8,7 +8,14 @@ import urllib3
 import urllib
 import requests
 import http
-def comp1_crawling(url, company_posting_name, last_updated, new_posting_details):
+import pymysql
+conn = pymysql.connect(
+    db='company_info',
+    user='root',
+    passwd='vishal',
+    host='localhost')
+def comp1_crawling(company_id, url, company_posting_name, last_updated, new_posting_details):
+    global conn
     try:
         url_to_crawl = requests.get(url, verify = False, timeout = 30)
         crawled_data = url_to_crawl.text
@@ -20,6 +27,12 @@ def comp1_crawling(url, company_posting_name, last_updated, new_posting_details)
                 position_name = position_name.replace(u'\xa0', u' ')
                 if position_name != '':
                     new_posting_details[position_name.lower()] = (datetime.now() - last_updated) / timedelta(minutes=1)
+                    # cur = conn.cursor()
+                    # cur.execute("""INSERT INTO posting_details(posting_name) VALUES(%s)""", (position_name.replace(u'\u2013', '-').encode('latin-1')))
+                    # posting_id = conn.insert_id()
+                    # print(type(posting_id))
+                    # cur.execute('INSERT INTO comp_posting_relation(company_id, posting_id) VALUES(%d, %d)', (company_id, posting_id))
+                    # cur.execute('UPDATE company_postings SET postings_number = postings_number + 1 WHERE id = %d' % company_id)
         print (new_posting_details)
     except HTTPError as e:
         logs = open('log.txt', 'a')

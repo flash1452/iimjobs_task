@@ -9,7 +9,14 @@ import urllib
 import requests
 import re
 import http
-def comp2_crawling(url, company_posting_name, last_updated, new_posting_details):
+import pymysql
+conn = pymysql.connect(
+    db='company_info',
+    user='root',
+    passwd='vishal',
+    host='localhost')
+def comp2_crawling(company_id, url, company_posting_name, last_updated, new_posting_details):
+    global conn
     try:
         url_to_crawl = requests.get(url, verify = False, timeout = 30)
         crawled_data = url_to_crawl.text
